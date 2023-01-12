@@ -1,0 +1,40 @@
+{block content}
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+<script src="https://unpkg.com/naja@2/dist/Naja.min.js"></script>
+
+<div id="banner">
+	<h1 n:block=title>Congratulations!</h1>
+</div>
+
+<div id="content">
+    {foreach $order as $val}
+        <a n:href="default $page, $val->value">{$val->name}</a>
+    {/foreach}
+    {snippet}
+	{foreach $articles as $article}
+        {snippet 'article_'.$article->id}
+            <h2><a n:href="detail, $article->id">{$article->title}</a></h2>
+            <div class="perex">{$article->perex}</div>
+            <div class="rank">
+                <a class="ajax" n:href="rank $article->id, -1">-</a>
+                <img width="{round(($article->rank+1)*100)}" alt="{$article->rank}" src="greendot.png" height="20">
+                <a class="ajax" n:href="rank $article->id, +1">+</a>
+            </div>
+        {/snippet}
+	{/foreach}
+	{/snippet}
+	<div class="pagination">
+   	    {for $i=1; $i<=$lastPage; $i++}
+   	        {if $i==$page}
+                <b>
+            {/if}
+                    <a n:href="default, $i">{$i}</a>
+   	        {if $i==$page}
+                </b>
+            {/if}
+   	    {/for}
+    </div>
+</div>
+<script>
+naja.initialize();
+</script>

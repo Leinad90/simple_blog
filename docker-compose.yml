@@ -1,0 +1,60 @@
+version: "3"
+services:
+    nginx:
+        build: ./nginx/
+        container_name: nginx-container
+        ports:
+            - 80:80
+        links:
+            - php
+        volumes_from:
+            - app-data
+
+    php:
+        build: ./php/   
+        image: php:8.2-fpm
+        container_name: php-container
+        expose:
+            - 9000
+        links:
+            - mysql
+        volumes_from:
+            - app-data
+
+    mysql:
+        image: mysql:latest
+        container_name: mysql-container
+        environment:
+            MYSQL_ROOT_PASSWORD: secret
+            MYSQL_DATABASE: mydb
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+        volumes_from:
+            - mysql-data
+    
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            PMA_HOST: mysql
+            PMA_USER: user
+            PMA_PASSWORD: password
+        ports:
+            - "8081:80"
+        restart: always
+        volumes:
+            - ./php.ini:/usr/local/etc/php/php.ini
+
+    app-data:
+      image: php:8.2-fpm
+      container_name: app-data-container
+      volumes:
+       - ./www/html/:/var/www/html/
+      command: "true"
+
+    mysql-data:
+      image: mysql:latest
+      build: ./mysql-data/
+      container_name: mysql-data-container
+      volumes:
+       - /var/lib/mysql
+      command: "true"

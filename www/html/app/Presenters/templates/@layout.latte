@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+
+	<title>{ifset title}{include title|stripHtml} | {/ifset}Novinky</title>
+</head>
+
+<body>
+    <h1 id="logo"><a n:href="Homepage:default">Novinky</a></h1>
+	<div>
+		<p>
+			{if $user->isLoggedIn()}
+				Přihlášený {$user->identity->name}
+				<a n:href="Login:logout">Odhlásit</a>
+			{else}
+				<a n:href="Login:default">Přihlášení</a>
+				<a n:href="Login:registration">Registrace</a>
+			{/if}
+		</p>
+	</div>
+    <div>
+	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+	{include content}
+	{block scripts}
+	<script src="https://nette.github.io/resources/js/3/netteForms.min.js"></script>
+	{/block}
+</body>
+</html>
