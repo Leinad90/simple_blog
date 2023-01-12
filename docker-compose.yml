@@ -11,8 +11,8 @@ services:
             - app-data
 
     php:
-        build: ./php/   
-        image: php:8.2-fpm
+        build: ./php/
+        image: php:8.2
         container_name: php-container
         expose:
             - 9000
@@ -31,21 +31,15 @@ services:
             MYSQL_PASSWORD: password
         volumes_from:
             - mysql-data
-    
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        environment:
-            PMA_HOST: mysql
-            PMA_USER: user
-            PMA_PASSWORD: password
-        ports:
-            - "8081:80"
-        restart: always
-        volumes:
-            - ./php.ini:/usr/local/etc/php/php.ini
+
+    composer:
+      image: composer:latest
+      command: ["composer", "install"]
+      volumes:
+        - /www/html:/app
 
     app-data:
-      image: php:8.2-fpm
+      image: nginx
       container_name: app-data-container
       volumes:
        - ./www/html/:/var/www/html/
